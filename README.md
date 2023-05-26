@@ -1,7 +1,7 @@
-# Spectrogram Recoloring Script 
+# Heatmap Recoloring using OpenCV 
 
 ### Description
-Python script which recolors spectrographic images via:
+Python script which recolors spectrographic images (or heatmaps) using the OpenCV Python package, in the following steps:
 - Conversion to grayscale
 - Applying a chosen Matplotlib colorsmap as a mask
 - Applying applying Canny edge detection and dilating the image regions around found edge locations, found in the grayscale representation, to reduce smudging.
