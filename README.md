@@ -38,6 +38,7 @@ def load_and_recolor_image(image_path, new_cmap='hot'):
     edge_threshold2 = 1250
 ```
 
+---
 ### More on Canny Edge Detection (from the [OpenCV Docs](https://docs.opencv.org/3.4/da/d22/tutorial_py_canny.html)):
 - [The comparision of gradients between borders of pixels] decides which are all edges are really edges and which are not. 
 - For this, we need two threshold values, minVal and maxVal. 
