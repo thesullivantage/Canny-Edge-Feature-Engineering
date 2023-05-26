@@ -81,15 +81,30 @@ if __name__ == "__main__":
 
     parser.add_argument("--image-path", help="Image to recolor")
     parser.add_argument("--cmap-name", help="Colormap to convert to")
+    parser.add_argument("--test", type=bool, help="Create sample outputs of each Perceptually Uniform Sequential colormap type in matplotlib")
 
     opts = parser.parse_args()
 
     image_path = os.path.join(os.getcwd(), opts.image_path)
     new_cmap = opts.cmap_name
-    colored_image = load_and_recolor_image(image_path, new_cmap)
-
-    imgName = '.'.join(image_path.split('.')[:-1])
-    outPath = f'{imgName}_recolored_{new_cmap}.png'
-    # Display the recolored image:
+    test = opts.test
+    # Perceptually Uniform Sequential colormap list (matplotlib)
+    cmap_list = ['viridis', 'plasma', 'inferno', 'magma', 'cividis']
     
-    cv2.imwrite(outPath, cv2.cvtColor(colored_image, cv2.COLOR_RGB2BGR))
+    if test == False:
+        colored_image = load_and_recolor_image(image_path, new_cmap)
+
+        imgName = '.'.join(image_path.split('.')[:-1])
+        outPath = f'{imgName}_recolored_{new_cmap}.png'
+        # Display the recolored image:
+        
+        cv2.imwrite(outPath, cv2.cvtColor(colored_image, cv2.COLOR_RGB2BGR))
+    else: 
+        for c in cmap_list:
+            colored_image = load_and_recolor_image(image_path, c)
+
+            imgName = '.'.join(image_path.split('.')[:-1])
+            outPath = f'{imgName}_recolored_{c}.png'
+            # Display the recolored image:
+            
+            cv2.imwrite(outPath, cv2.cvtColor(colored_image, cv2.COLOR_RGB2BGR))
