@@ -10,7 +10,7 @@ Python script which recolors spectrographic images (or heatmaps) using the OpenC
 ---
 
 ## Usage
-1. 
+1. Run:
 ```bash
 cd repositoryName/
 pip install -r requirements.txt # to install required dependencies
