@@ -12,13 +12,13 @@ import os
 def load_and_recolor_image(image_path, new_cmap='hot'):
     
     
-    '''Canny Edge Detection [CHECK]:
+    '''Canny Edge Detection:
     - [The comparision of gradients between borders of pixels] decides which are all edges are really edges and which are not. 
-    - For this, we need two threshold values, minVal and maxVal. 
+    - For this, we need two threshold values, minVal and maxVal. [hysterisis-based inclusion]
     - Any edges with intensity gradient more than maxVal are sure to be edges and those below minVal are sure to be non-edges, so discarded. 
     - Those who lie between these two thresholds are classified edges or non-edges based on their connectivity. 
-    - If they are connected to "sure-edge" pixels, they are considered to be part of edges. 
-    - Otherwise, they are also discarded.
+        - If they are connected to "sure-edge" pixels, they are considered to be part of edges. 
+        - Otherwise, they are also discarded.
     '''
     ### hand tune edge thresholds for individual use case
     edge_threshold1 = 500
@@ -54,7 +54,7 @@ def load_and_recolor_image(image_path, new_cmap='hot'):
     # detect edges in the grayscale image conversion
     edges = cv2.Canny(img_original, edge_threshold1, edge_threshold2)
     
-    # dilate the edges to create a blur for areas near high contrast (steep edge gradient) borders (OPTIONAL: DEPENDING ON DESIRED RESOLUTION)
+    # dilate the edges with a Gaussian Blur to create a blur for areas near high contrast (steep edge gradient) borders (ADJUST: DEPENDING ON DESIRED RESOLUTION)
     dilated_edges = cv2.dilate(edges, np.ones((3, 3), np.uint8))
 
     # make 3-channel (R,G,B) version of the mask to apply on the rgb image

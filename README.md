@@ -54,9 +54,9 @@ by consulting the [Matplotlib Colormap Documentation](https://matplotlib.org/sta
 ---
 ### More on Canny Edge Detection (from the [OpenCV Docs](https://docs.opencv.org/3.4/da/d22/tutorial_py_canny.html)):
 - [The comparision of gradients between borders of pixels] decides which are all edges are really edges and which are not. 
-- For this, we need two threshold values, minVal and maxVal. 
+- For this, we need two threshold values, minVal and maxVal. [hysterisis-based inclusion]
 - Any edges with intensity gradient more than maxVal are sure to be edges and those below minVal are sure to be non-edges, so discarded. 
 - Those who lie between these two thresholds are classified edges or non-edges based on their connectivity. 
-- If they are connected to "sure-edge" pixels, they are considered to be part of edges. 
-- Otherwise, they are also discarded. 
+    - If they are connected to "sure-edge" pixels, they are considered to be part of edges. 
+    - Otherwise, they are also discarded.
 
