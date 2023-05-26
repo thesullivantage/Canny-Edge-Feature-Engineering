@@ -3,11 +3,13 @@
 ### Description
 Python script which recolors spectrographic images (or heatmaps) using the OpenCV Python package, in the following steps:
 - Conversion to grayscale
-- Applying a chosen Matplotlib colorsmap as a mask
+- Applying a chosen Matplotlib perceptually uniform sequential colormap as a mask
 - Applying applying Canny edge detection and dilating the image regions around found edge locations, found in the grayscale representation, to reduce smudging.
 - The flooring of the recolored image, in detected white or black regions, to those colors (perhaps redundantly).
 
-### Usage
+---
+
+## Usage
 1. 
 ```bash
 cd repositoryName/
@@ -36,7 +38,18 @@ It may be a good option to try all possibilities using the test flag!
 def load_and_recolor_image(image_path, new_cmap='hot'):
     edge_threshold1 = 500
     edge_threshold2 = 1250
+``` 
+4. Substitute some your desired, alternative colormaps at this point of the script
+```python
+    try:
+        # generate colormap
+        cmap = plt.get_cmap(new_cmap)
+    except Exception:
+        # if invalid colormap name entered, throw:
+        print('please enter a valid colormap name.')
+        sys.exit(1) 
 ```
+by consulting the [Matplotlib Colormap Documentation](https://matplotlib.org/stable/tutorials/colors/colormaps.html)
 
 ---
 ### More on Canny Edge Detection (from the [OpenCV Docs](https://docs.opencv.org/3.4/da/d22/tutorial_py_canny.html)):
@@ -45,5 +58,5 @@ def load_and_recolor_image(image_path, new_cmap='hot'):
 - Any edges with intensity gradient more than maxVal are sure to be edges and those below minVal are sure to be non-edges, so discarded. 
 - Those who lie between these two thresholds are classified edges or non-edges based on their connectivity. 
 - If they are connected to "sure-edge" pixels, they are considered to be part of edges. 
-- Otherwise, they are also discarded.
+- Otherwise, they are also discarded. 
 
