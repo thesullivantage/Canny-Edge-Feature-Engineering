@@ -13,10 +13,12 @@ def load_and_recolor_image(image_path, new_cmap='hot'):
     
     
     '''Canny Edge Detection [CHECK]:
-    - Any gradient magnitude larger than the higher threshold is considered to be an edge.
-    - Any gradient magnitude smaller than the lower threshold is not considered to be an edge.
-    - Gradient magnitudes between the two thresholds are considered edges only if they are connected to "sure-edge" pixels (i.e., those above the higher threshold).
-    thresholds of [500, 1250] set through trial and error. Feel free to set your own
+    - [The comparision of gradients between borders of pixels] decides which are all edges are really edges and which are not. 
+    - For this, we need two threshold values, minVal and maxVal. 
+    - Any edges with intensity gradient more than maxVal are sure to be edges and those below minVal are sure to be non-edges, so discarded. 
+    - Those who lie between these two thresholds are classified edges or non-edges based on their connectivity. 
+    - If they are connected to "sure-edge" pixels, they are considered to be part of edges. 
+    - Otherwise, they are also discarded.
     '''
     
     edge_threshold1 = 500
@@ -79,9 +81,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__,
                                         formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    parser.add_argument("--image-path", help="Image to recolor")
-    parser.add_argument("--cmap-name", help="Colormap to convert to")
-    parser.add_argument("--test", type=bool, help="Create sample outputs of each Perceptually Uniform Sequential colormap type in matplotlib")
+    parser.add_argument("--image-path", help="image path to recolor (relative to current directory).")
+    parser.add_argument("--cmap-name", help="perceptually uniform sequential colormap (from matplotlib) to convert to (throws error if not a valid type).")
+    parser.add_argument("--test", type=bool, help="create sample outputs of each perceptually uniform sequential colormap type, in matplotlib, in original image directory.")
 
     opts = parser.parse_args()
 
