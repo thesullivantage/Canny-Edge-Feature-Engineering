@@ -18,7 +18,7 @@ pip install -r requirements.txt # to install required dependencies
 ```bash
 python recolorimage.py --help
 ```
-We can see the possible arguments:
+We can see the possible options:
 ```
 usage: recolorimage.py [-h] [--image-path IMAGE_PATH] [--cmap-name CMAP_NAME] [--test TEST]
 options:
@@ -29,3 +29,4 @@ options:
                         perceptually uniform sequential colormap (from matplotlib) to convert to (throws error if not a valid type).
   --test TEST           create sample outputs of each perceptually uniform sequential colormap type, in matplotlib, in original image directory.
 ```
+3. Change the edge margins in the script as you find useful for your images.
