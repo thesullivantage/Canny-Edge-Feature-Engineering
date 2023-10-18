@@ -39,36 +39,39 @@ def load_and_recolor_image(image_path, new_cmap='hot'):
         sys.exit(1) 
         ### (see also docs for alternatives mentioned in README.md)   
 
-    # map grayscale image to recoloring using matplotlib colormap
+    ### map grayscale image to colormap
     colored_image = cmap(img_norm)
 
-    # convert to float32 for cvtColor method; it expects floats to be 32-bit
+    ### to 32-bit float
     colored_image = colored_image.astype(np.float32)
 
-    # matplotlib gives rgba images; we need to back in rgb
+    ### convert from rgba to rgb
     colored_image_rgb = cv2.cvtColor(colored_image, cv2.COLOR_RGBA2RGB)
     
-    # convert back to 0-255 pixel values for color (uint8)
+    ### convert to 0-255 pixel values for color
     colored_image_rgb = (colored_image_rgb * 255).astype(np.uint8)
     
-    # detect edges in the grayscale image conversion
+    ### detect edges in the converted grayscale image using hysteresis; ADJUST THRESHOLDS DEPENDING ON DESIRED RESOLUTION
+
     edges = cv2.Canny(img_original, edge_threshold1, edge_threshold2)
     
-    # dilate the edges with a Gaussian Blur to create a blur for areas near high contrast (steep edge gradient) borders (ADJUST: DEPENDING ON DESIRED RESOLUTION)
+    ### apply dilation filter to blur high contrast edges (steep edge gradients); replace anchor pixel (center, by default) of sliding kernel with largest pixel value in (view of the) current kernel position
+    ### NOTE: not necessarily suitable for tasks where features need to remain precisely intact. 
+        ### Included here for smoothing of spectrograms for visualization purposes.
     dilated_edges = cv2.dilate(edges, np.ones((3, 3), np.uint8))
 
-    # make 3-channel (R,G,B) version of the mask to apply on the rgb image
+    ### make 3-channel RGB mask (length-3 array, each of same dimension as image) to apply on the rgb image
     edge_mask_rgb = np.stack([dilated_edges]*3, axis=-1)
 
-    # [OPTIONAL] edge mask applies near sharp edges, there: restore the original grayscale color in the colored image.
-    ### Effect: keep sharp black and white outlines in current configuration. 
-    ### BUT, also have some around i.e. spectrographic (blurred) features if not careful with thresholds. 
+    ### [OPTIONAL] 
+    ### edge mask applies near sharp edges, there: restore the original grayscale color in the colored image.
+    ### Effect: keep sharp black and white outlines in the current configuration. 
     img_original_rgb = cv2.cvtColor(img_original, cv2.COLOR_GRAY2RGB)
 
-    # apply selected pixels from last step to (already) recolored pixels to "retrace solid outlines" of image features in B&W
+    ### Apply selected pixels from the last step to the already recolored image to effectively retrace solid outlines of image features in B&W
     colored_image_rgb[edge_mask_rgb > 0] = img_original_rgb[edge_mask_rgb > 0]
 
-    # (probably redundant) Floor white and black colors to those corresponding pixel values. 
+    ### (Recolor) Floor white and black colors to those corresponding pixel values. 
     colored_image_rgb[img_original == 0] = 0
     colored_image_rgb[img_original == 255] = 255
 
@@ -80,15 +83,15 @@ if __name__ == "__main__":
                                         formatter_class=argparse.RawDescriptionHelpFormatter)
 
     parser.add_argument("--image-path", help="image path to recolor (relative to current directory).")
-    parser.add_argument("--cmap-name", help="perceptually uniform sequential colormap (from matplotlib) to convert to (throws error if not a valid type).")
-    parser.add_argument("--test", type=bool, help="create sample outputs of each perceptually uniform sequential colormap type, in matplotlib, in original image directory.")
+    parser.add_argument("--cmap-name", help="From Matplotlib: sequential colormap to recolor image to (throws error if not a valid type).")
+    parser.add_argument("--test", type=bool, help="create sample outputs of each perceptually uniform sequential colormap type in the original image directory.")
 
     opts = parser.parse_args()
 
     image_path = os.path.join(os.getcwd(), opts.image_path)
     new_cmap = opts.cmap_name
     test = opts.test
-    # Perceptually Uniform Sequential colormap list (matplotlib)
+    ### Perceptually Uniform Sequential colormap list (matplotlib)
     cmap_list = ['viridis', 'plasma', 'inferno', 'magma', 'cividis']
     
     if test == False:
@@ -101,8 +104,8 @@ if __name__ == "__main__":
         cv2.imwrite(outPath, cv2.cvtColor(colored_image, cv2.COLOR_RGB2BGR))
     else: 
         '''
-        if we want to see samples of all colormaps which we could use from the above list on our image data,
-        use --test True in the command line! Outputs all to same directory as input image (FIXME).
+        if we want to see samples of all colormaps that we could use from the above list on our image data,
+        use --test True in the command line! Outputs all to the same directory as the input image (FIXME).
         '''
         for c in cmap_list:
             colored_image = load_and_recolor_image(image_path, c)
