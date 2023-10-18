@@ -81,7 +81,6 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description=__doc__,
                                         formatter_class=argparse.RawDescriptionHelpFormatter)
-
     parser.add_argument("--image-path", type=str, required=True,  help="image path to recolor (relative to current directory).")
     parser.add_argument("--cmap-name", type=str, required=True, help="From Matplotlib: sequential colormap to recolor image to (throws error if not a valid type).")
     parser.add_argument("--output-dir", type=str, default='.', help="path to output directory.")
@@ -94,9 +93,9 @@ if __name__ == "__main__":
         )
     
     opts = parser.parse_args()
-
-    image_path = os.path.join(os.getcwd(), opts.image_path)
-    new_cmap = opts.cmap_name
+    
+    ### TODO: More extensive I/O testing for image path reading for this util.
+    image_path = os.path.join(opts.image_path)
 
     ### Perceptually Uniform Sequential colormap list (matplotlib)
     cmap_list = ['viridis', 'plasma', 'inferno', 'magma', 'cividis']
@@ -104,20 +103,15 @@ if __name__ == "__main__":
     if opts.output_dir == '.':
         opts.output_dir = os.getcwd()
         
-    ### Conduct recoloring/edge tracing
-    colored_image = load_and_recolor_image(image_path, new_cmap)
     imgName = '.'.join(image_path.split('.')[:-1])
 
-    outFile = f'{imgName}_recolored_{new_cmap}.png'
-    outPath = os.path.join(opts.output_dir, outFile)
-    
     if test == False:
-        colored_image = load_and_recolor_image(image_path, new_cmap)
+        new_cmap = opts.cmap_name
+        ### Conduct recoloring/edge tracing
 
-        # imgName = '.'.join(image_path.split('.')[:-1])
-        # outPath = f'{imgName}_recolored_{new_cmap}.png'
-        # Display the recolored image:
-        
+        colored_image = load_and_recolor_image(image_path, new_cmap)
+        outFile = f'{imgName}_recolored_{new_cmap}.png'
+        outPath = os.path.join(opts.output_dir, outFile)
         cv2.imwrite(outPath, cv2.cvtColor(colored_image, cv2.COLOR_RGB2BGR))
     else: 
         '''
@@ -125,10 +119,10 @@ if __name__ == "__main__":
         use --test True in the command line! Outputs all to the same directory as the input image (FIXME).
         '''
         for c in cmap_list:
+            ### Conduct recoloring/edge tracing
             colored_image = load_and_recolor_image(image_path, c)
-
-            imgName = '.'.join(image_path.split('.')[:-1])
-            outPath = f'{imgName}_recolored_{c}.png'
+            outFile = f'{imgName}_recolored_{c}.png'
+            outPath = os.path.join(opts.output_dir, outFile)
             # Display the recolored image:
             
             cv2.imwrite(outPath, cv2.cvtColor(colored_image, cv2.COLOR_RGB2BGR))
