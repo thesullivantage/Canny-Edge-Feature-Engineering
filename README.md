@@ -2,11 +2,9 @@
 
 ### Description
 Python script which recolors spectrographic images (or heatmaps) using the OpenCV Python package, in the following steps:
-- Conversion to grayscale
-- Applying a chosen Matplotlib perceptually uniform sequential colormap as a mask
-- Applying applying Canny edge detection and dilating the image regions around found edge locations, found in the grayscale representation, to reduce smudging.
-- The flooring of the recolored image, in detected white or black regions, to those colors (perhaps redundantly).
-
+- Convert image to grayscale
+- Applying  Canny edge detection and slightly dilating the image regions around found edge locations (optional), found in the grayscale representation, to reduce smudging and pre-process images for segmentation models.
+- Overlay found edges in black & white atop the color image.
 ---
 
 ## Usage
