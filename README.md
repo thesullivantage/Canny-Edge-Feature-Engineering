@@ -1,4 +1,4 @@
-# Heatmap Recoloring using OpenCV 
+# Heatmap Recoloring & Edge Detection for ML Feature Engineering using OpenCV
 
 ### Description
 Python script which recolors spectrographic images (or heatmaps) using the OpenCV Python package, in the following steps:
